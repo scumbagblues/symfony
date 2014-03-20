@@ -135,9 +135,32 @@ class appDevUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirectab
 
         }
 
-        // acme_hello_homepage
+        // acme_store_homepage
         if (0 === strpos($pathinfo, '/hello') && preg_match('#^/hello/(?P<name>[^/]++)$#s', $pathinfo, $matches)) {
-            return $this->mergeDefaults(array_replace($matches, array('_route' => 'acme_hello_homepage')), array (  '_controller' => 'Acme\\HelloBundle\\Controller\\DefaultController::indexAction',));
+            return $this->mergeDefaults(array_replace($matches, array('_route' => 'acme_store_homepage')), array (  '_controller' => 'Acme\\StoreBundle\\Controller\\DefaultController::indexAction',));
+        }
+
+        // acme_store_product
+        if (rtrim($pathinfo, '/') === '/product/create') {
+            if (substr($pathinfo, -1) !== '/') {
+                return $this->redirect($pathinfo.'/', 'acme_store_product');
+            }
+
+            return array (  '_controller' => 'Acme\\StoreBundle\\Controller\\DefaultController::createAction',  '_route' => 'acme_store_product',);
+        }
+
+        // acme_store_category
+        if (rtrim($pathinfo, '/') === '/category/create') {
+            if (substr($pathinfo, -1) !== '/') {
+                return $this->redirect($pathinfo.'/', 'acme_store_category');
+            }
+
+            return array (  '_controller' => 'Acme\\StoreBundle\\Controller\\DefaultController::createProductAction',  '_route' => 'acme_store_category',);
+        }
+
+        // hello
+        if (0 === strpos($pathinfo, '/hello') && preg_match('#^/hello/(?P<firstName>[^/]++)/(?P<lastName>[^/]++)$#s', $pathinfo, $matches)) {
+            return $this->mergeDefaults(array_replace($matches, array('_route' => 'hello')), array (  '_controller' => 'Acme\\HelloBundle\\Controller\\HelloController::indexAction',  'color' => 'green',));
         }
 
         // _welcome
